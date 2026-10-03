@@ -1,6 +1,7 @@
 import * as electron from "electron";
 import log from "electron-log";
 import { capitalizeFirstLetter, parseIntSafe } from "isaacscript-common-ts";
+import { canonicalizeAdditionalStartingItems } from "../common/additionalStartingItems";
 import * as chat from "./chat";
 import { FADE_TIME, IS_DEV, WEBSOCKET_URL } from "./constants";
 import { discordEmotes } from "./discordEmotes";
@@ -520,6 +521,10 @@ function initRaceCommandHandlers(conn: Connection) {
 
     // Keep track of what races are currently going.
     const race = data;
+    race.ruleset.additionalStartingItems = canonicalizeAdditionalStartingItems(
+      race.ruleset.additionalStartingItems,
+      race.ruleset,
+    );
     g.raceList.set(race.id, race);
 
     // Update the "Current races" area.

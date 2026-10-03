@@ -24,6 +24,9 @@ export class ModSocket {
   /** Converted to "startingItems" later on. */
   startingBuildIndex = -1;
 
+  /** Resolved into the existing startingItems command, not a new command. */
+  additionalStartingItems: readonly number[] = [];
+
   /** This corresponds to the graphic to draw on the screen. */
   countdown = -1;
 

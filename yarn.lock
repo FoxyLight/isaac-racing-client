@@ -5889,7 +5889,7 @@ __metadata:
     electron-log: "npm:^5.1.1"
     electron-store: "npm:^8.1.0"
     electron-updater: "npm:^6.1.8"
-    isaac-racing-common: "npm:^1.0.13"
+    isaac-racing-common: "github:FoxyLight/isaac-racing-common#ed2ea886f700f742fd6cfd98718af077c983874c"
     isaacscript: "npm:^4.2.2"
     isaacscript-common-node: "npm:^3.0.1"
     isaacscript-common-ts: "npm:^16.1.0"
@@ -5912,10 +5912,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"isaac-racing-common@npm:^1.0.13":
-  version: 1.0.13
-  resolution: "isaac-racing-common@npm:1.0.13"
-  checksum: 10c0/e77c693f52c1bc11729a970cc266f2b6f8b0691b634823ee1c4a175dc0803eaddff84acba9f4d3bf26e23bc87288a8da0c26e1b484e9f76dad7d677351b8b0eb
+"isaac-racing-common@github:FoxyLight/isaac-racing-common#ed2ea886f700f742fd6cfd98718af077c983874c":
+  version: 1.0.14
+  resolution: "isaac-racing-common@https://github.com/FoxyLight/isaac-racing-common.git#commit=ed2ea886f700f742fd6cfd98718af077c983874c"
+  checksum: 10c0/38826cfa4318ee2f11b375c16ba4b31f741759044688253f6e6767e19632075d4bfbc99810b0c6e622c8bbeb1a37b26532f083c3939cef49c4c46d7bb65f29c4
   languageName: node
   linkType: hard
 

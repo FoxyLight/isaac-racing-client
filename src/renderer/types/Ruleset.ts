@@ -13,6 +13,9 @@ export interface Ruleset {
   goal: RaceGoal;
   startingBuildIndex: number;
   startingItems: number[];
+
+  /** Missing/null on legacy payloads; normalized when received. */
+  additionalStartingItems?: readonly number[] | null;
   seed: string;
   difficulty: RaceDifficulty;
 }

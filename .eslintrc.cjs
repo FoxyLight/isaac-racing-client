@@ -19,6 +19,45 @@ const config = {
     project: "./tsconfig.eslint.json",
   },
 
+  // @template-customization-start
+
+  overrides: [
+    {
+      files: ["test/additionalStartingItems.test.ts"],
+      rules: {
+        // This local test imports only the pure module it verifies. Keep other boundaries intact.
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            patterns: [
+              {
+                group: [
+                  "**/src",
+                  "**/src/**",
+                  "!../src",
+                  "!../src/common",
+                  "!../src/common/additionalStartingItems",
+                ],
+                message:
+                  "Tests may import only their pure client module from src.",
+              },
+              {
+                group: ["**/dist", "**/dist/**"],
+                message: "Import source rather than generated output.",
+              },
+              {
+                group: ["**/index", "**/index.{js,cjs,mjs,ts,cts,mts}"],
+                message: "Import directly from the defining module.",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+
+  // @template-customization-end
+
   rules: {
     // Insert changed or disabled rules here, if necessary.
 
