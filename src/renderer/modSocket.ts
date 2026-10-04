@@ -1,5 +1,7 @@
 import * as electron from "electron";
 import { parseIntSafe } from "isaacscript-common-ts";
+import { resolveStartingItems } from "../common/additionalStartingItems";
+import { CHARACTER_MAP } from "./characterMap";
 import { getHoursAndMinutes, isChatForThisRace } from "./chat";
 import { BUILDS } from "./constants";
 import { g } from "./globals";
@@ -150,7 +152,21 @@ export function sendAll(): void {
   send("set", `goal ${g.modSocket.goal}`);
   send("set", `seed ${seed}`);
   // "startingBuildIndex" is converted to "startingItems".
-  send("set", `startingItems ${JSON.stringify(startingItems)}`);
+  const resolvedStartingItems = resolveStartingItems(
+    startingItems,
+    g.modSocket.additionalStartingItems,
+    {
+      format: g.modSocket.format,
+      character:
+        [...CHARACTER_MAP].find(
+          ([, character]) => character === g.modSocket.character,
+        )?.[0] ?? "",
+      ranked: g.modSocket.ranked,
+      solo: g.modSocket.solo,
+      startingBuildIndex: g.modSocket.startingBuildIndex,
+    },
+  );
+  send("set", `startingItems ${JSON.stringify(resolvedStartingItems)}`);
   send("set", `countdown ${g.modSocket.countdown}`);
   send("set", `placeMid ${g.modSocket.placeMid}`);
   send("set", `place ${g.modSocket.place}`);

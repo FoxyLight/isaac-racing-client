@@ -26,8 +26,11 @@ await lintScript(async () => {
 
     // @template-customization-start
 
-    // Check for unused exports.
-    $`ts-prune --error`,
+    // Run the pure regression scenarios locally and in the existing CI lint job.
+    $`yarn test:additional-starting-items`,
+
+    // Check all application exports, including their focused test consumers.
+    $`ts-prune --project test/tsconfig.json --error`,
 
     // Check for base file updates.
     $`npx isaacscript check-ts --ignore build.ts,lint.ts`,

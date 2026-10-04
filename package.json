@@ -18,6 +18,7 @@
     "build": "bash ./build.sh",
     "lint": "npx tsx --tsconfig ./scripts/tsconfig.json ./scripts/lint.mts",
     "nuke": "isaacscript nuke",
+    "test:additional-starting-items": "tsc --noEmit --project test/tsconfig.json && tsx --test test/additionalStartingItems.test.ts",
     "update": "isaacscript update"
   },
   "dependencies": {
@@ -27,7 +28,7 @@
     "electron-log": "^5.1.1",
     "electron-store": "^8.1.0",
     "electron-updater": "^6.1.8",
-    "isaac-racing-common": "^1.0.13",
+    "isaac-racing-common": "github:FoxyLight/isaac-racing-common#ed2ea886f700f742fd6cfd98718af077c983874c",
     "isaacscript-common-ts": "^16.1.0",
     "klaw-sync": "^6.0.0",
     "linkify-html": "^4.1.3",

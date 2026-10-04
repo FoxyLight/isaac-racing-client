@@ -292,6 +292,8 @@ export function show(raceID: number): void {
   g.modSocket.goal = race.ruleset.goal;
   g.modSocket.seed = race.ruleset.seed;
   g.modSocket.startingBuildIndex = race.ruleset.startingBuildIndex;
+  g.modSocket.additionalStartingItems =
+    race.ruleset.additionalStartingItems ?? [];
   g.modSocket.countdown = -1;
   // The real values for the rest will be sent once we receive the "racerList" command from the
   // server.
