@@ -995,6 +995,31 @@ body {
   height: 4.2em;
 }
 
+#new-race-additional-items {
+  margin: 1em 0;
+}
+
+#new-race-additional-results {
+  max-height: 12em;
+  overflow-y: auto;
+  border: 1px solid #888;
+  padding: 0.5em;
+}
+
+#new-race-additional-results label {
+  display: inline-block;
+  margin-left: 0.5em;
+}
+
+#new-race-additional-selected button {
+  margin: 0.25em;
+  white-space: normal;
+}
+
+#new-race-additional-items .invalid {
+  color: #ff9999;
+}
+
 #new-race-submit-button-icon {
   position: relative;
   right: 12px;

@@ -25,8 +25,10 @@ import {
   setElementBackgroundImage,
   setElementBuildIcon,
 } from "../utils";
+import * as additionalStartingItems from "./additionalStartingItems";
 
 export function init(): void {
+  additionalStartingItems.init();
   $("#new-race-title-randomize").click(() => {
     // Don't randomize the race name if we are on a test account.
     const match = /TestAccount\d+/.exec(g.myUsername);
@@ -143,6 +145,10 @@ export function init(): void {
 
   $("#new-race-starting-build").change(newRaceStartingBuildChange);
 
+  $("#new-race-starting-build").append(
+    $("<option></option>").val(RANDOM_BUILD).text("Random"),
+  );
+
   $("#new-race-difficulty-normal").change(newRaceDifficultyChange);
   $("#new-race-difficulty-hard").change(newRaceDifficultyChange);
 
@@ -155,6 +161,14 @@ function submit(event: JQuery.SubmitEvent) {
 
   // Don't do anything if we are not on the right screen.
   if (g.currentScreen !== Screen.LOBBY) {
+    return false;
+  }
+
+  // Validate before resolving Random or closing the form. Never drop invalid choices.
+  try {
+    additionalStartingItems.getSelection();
+  } catch (error) {
+    errorShow(error instanceof Error ? error.message : String(error));
     return false;
   }
 
@@ -255,12 +269,13 @@ function submit(event: JQuery.SubmitEvent) {
     }
 
     // The server expects this to be a number.
-    startingBuildIndex = parseIntSafe(startingBuildVal) ?? -1;
-    if (startingBuildIndex === -1) {
+    const parsedBuildIndex = parseIntSafe(startingBuildVal);
+    if (parsedBuildIndex === undefined) {
       throw new Error(
         `Failed to parse the starting build value of: ${startingBuildVal}`,
       );
     }
+    startingBuildIndex = parsedBuildIndex;
 
     // If we selected "Random" for the build, we must select a random build before sending it to the
     // server.
@@ -322,6 +337,23 @@ function submit(event: JQuery.SubmitEvent) {
     difficulty = "normal";
   }
 
+  if (typeof format !== "string" || typeof character !== "string") {
+    throw new TypeError("Race format and character must be strings.");
+  }
+  let additionalItems: readonly number[];
+  try {
+    additionalItems = additionalStartingItems.getSelection({
+      format,
+      character,
+      ranked,
+      solo,
+      startingBuildIndex,
+    });
+  } catch (error) {
+    errorShow(error instanceof Error ? error.message : String(error));
+    return false;
+  }
+
   // Close the tooltip (and all error tooltips, if present).
   closeAllTooltips();
 
@@ -337,6 +369,7 @@ function submit(event: JQuery.SubmitEvent) {
     character,
     goal,
     startingBuildIndex,
+    additionalStartingItems: additionalItems,
     difficulty,
   };
   g.currentScreen = Screen.WAITING_FOR_SERVER;
@@ -376,6 +409,7 @@ function newRaceSizeChange(_event: JQuery.ChangeEvent | null, fast = false) {
     $("#new-race-ranked-no").prop("checked", true);
     newRaceRankedChange(null, true);
   }
+  additionalStartingItems.refresh();
 }
 
 function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
@@ -462,6 +496,7 @@ function newRaceRankedChange(_event: JQuery.ChangeEvent | null, fast = false) {
       newRaceStartingBuildChange(null);
     }
   }
+  additionalStartingItems.refresh();
 }
 
 function newRacePasswordChange(
@@ -504,6 +539,7 @@ function newRaceFormatChange(_event: JQuery.ChangeEvent | null, fast = false) {
       },
     );
   }
+  additionalStartingItems.refresh();
 }
 
 function newRaceCharacterChange(_event: JQuery.ChangeEvent | null) {
@@ -513,6 +549,7 @@ function newRaceCharacterChange(_event: JQuery.ChangeEvent | null) {
     "new-race-character-icon",
     `${IMG_URL_PREFIX}/characters/${newCharacter}.png`,
   );
+  additionalStartingItems.refresh();
 }
 
 function newRaceGoalChange(_event: JQuery.ChangeEvent | null) {
@@ -548,6 +585,7 @@ function newRaceStartingBuildChange(_event: JQuery.ChangeEvent | null) {
   } else {
     setElementBuildIcon("new-race-starting-build-icon", newBuild);
   }
+  additionalStartingItems.refresh();
 }
 
 function newRaceDifficultyChange(_event: JQuery.ChangeEvent | null) {
@@ -606,6 +644,7 @@ export function tooltipFunctionReady(): void {
     true,
   );
   newRaceDifficultyChange(null);
+  additionalStartingItems.reset();
   // (The change functions have to be interspersed here, otherwise the format change would overwrite
   // the character change.)
 
